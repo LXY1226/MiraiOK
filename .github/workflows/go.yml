@@ -16,20 +16,22 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '1.14.3' # The Go version to download (if necessary) and use.
+          
+      - name: Tidy Go modules
         run: go mod tidy
 
       - name: Windows x86
-        run: GOOS=windows GOARCH=386 go build -o output/miraiOK_windows_386.exe .
+        run: GOOS=windows GOARCH=386 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
 
       - name: Windows x64
-        run: GOOS=windows GOARCH=amd64 go build -o output/miraiOK_windows_amd64.exe .
+        run: GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
 
       - name: others
         run: |
-          GOOS=windows GOARCH=amd64 go build -o output/miraiOK_windows_amd64.exe .
-          GOOS=linux GOARCH=amd64 go build -o output/miraiOK_linux_amd64 .
-          GOOS=linux GOARCH=arm64 go build -o output/miraiOK_linux_arm64 .
-          GOOS=darwin GOARCH=amd64 go build -o output/miraiOK_darwin_amd64.exe .
+          GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
+          GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
+          GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64.exe .
 
       - name: UPX
         uses: gacts/upx@master
