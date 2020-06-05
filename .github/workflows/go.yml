@@ -49,7 +49,7 @@ jobs:
       - name: UPX
         uses: gacts/upx@master
         with:
-          dir: 'output/'
+          file: 'output/*'
           upx_args: '-9'
 
       - name: Upload Build Artifact
