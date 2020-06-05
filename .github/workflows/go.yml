@@ -5,6 +5,7 @@ on:
       - master
     paths:
       - '**.go'
+      - '.github/workflows/**.yml'
 
 jobs:
   my-job:
