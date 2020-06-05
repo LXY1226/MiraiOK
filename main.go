@@ -13,9 +13,6 @@ package main
 import (
 	"fmt"
 	"gitee.com/LXY1226/logging"
-	"github.com/k0kubun/go-ansi"
-	"golang.org/x/text/encoding/simplifiedchinese"
-	"golang.org/x/text/transform"
 	"os"
 	"os/exec"
 	"strings"
@@ -76,9 +73,10 @@ func main() {
 	logging.DEBUG(args...)
 	cmd := exec.Command(javaPath, args...)
 
-	cmd.Stdout = transform.NewWriter(ansi.NewAnsiStdout(), simplifiedchinese.GBK.NewDecoder())
-	cmd.Stderr = os.Stdout
+	cmd.Stdout = console
+	cmd.Stderr = console
 	cmd.Stdin = os.Stdin
+	logging.INFO("启动Mirai...")
 	err = cmd.Run()
 	if err != nil {
 		panic(err)
