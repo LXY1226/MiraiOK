@@ -6,14 +6,17 @@ on:
 
 jobs:
   my-job:
-    name: My Job
+    name: Build MiraiOK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: Build
+      - name: Setup Golang environment
         uses: actions/setup-go@v1
+        with:
+          go-version: '1.14.3' # The Go version to download (if necessary) and use.
+        run: go mod tidy
 
       - name: Windows x86
         run: GOOS=windows GOARCH=386 go build -o output/miraiOK_windows_386.exe .
