@@ -16,7 +16,15 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '1.14.3' # The Go version to download (if necessary) and use.
-          
+
+      - name: Cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
+
       - name: Tidy Go modules
         run: go mod tidy
 
@@ -26,12 +34,17 @@ jobs:
       - name: Windows x64
         run: GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
 
-      - name: others
-        run: |
-          GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
-          GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
-          GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
-          GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64.exe .
+      - name: Linux amd64
+        run: GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
+
+      - name: Linux arm64
+        run: GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
+
+      - name: Linux arm
+        run: GOOS=linux GOARCH=arm go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm .
+
+      - name: Darwin amd64
+        run: GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
 
       - name: UPX
         uses: gacts/upx@master
@@ -39,14 +52,11 @@ jobs:
           dir: 'output/'
           upx_args: '-9'
 
-      - name: Cache
-        uses: actions/cache@v2.0.0
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v2
         with:
-          # A list of files, directories, and wildcard patterns to cache and restore
-          path: ~/go/pkg/mod
-          # An explicit key for restoring and saving the cache
-          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
-          # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
-          # restore-keys: # optional
-
+          # Artifact name
+          name: # optional
+          # A file, directory or wildcard pattern that describes what to upload
+          path: "output/"
 
