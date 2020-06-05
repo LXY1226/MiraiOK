@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"gitee.com/LXY1226/logging"
+	"io"
 	"io/ioutil"
 	"os"
 )
@@ -25,11 +26,11 @@ func loadConfig() {
 	for {
 		line, _, err := rd.ReadLine()
 		if err != nil {
+			if err == io.EOF {
+				logging.INFO("config中无有效配置")
+				return
+			}
 			logging.WARN("读取config失败:", err.Error())
-			return
-		}
-		if line == nil {
-			logging.INFO("config中无有效配置")
 			return
 		}
 		if len(line) == 0 || line[0] == '#' {
