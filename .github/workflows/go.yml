@@ -1,0 +1,47 @@
+name: Compile MiraiOK
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  my-job:
+    name: My Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Build
+        uses: actions/setup-go@v1
+
+      - name: Windows x86
+        run: GOOS=windows GOARCH=386 go build -o output/miraiOK_windows_386.exe .
+
+      - name: Windows x64
+        run: GOOS=windows GOARCH=amd64 go build -o output/miraiOK_windows_amd64.exe .
+
+      - name: others
+        run: |
+          GOOS=windows GOARCH=amd64 go build -o output/miraiOK_windows_amd64.exe .
+          GOOS=linux GOARCH=amd64 go build -o output/miraiOK_linux_amd64 .
+          GOOS=linux GOARCH=arm64 go build -o output/miraiOK_linux_arm64 .
+          GOOS=darwin GOARCH=amd64 go build -o output/miraiOK_darwin_amd64.exe .
+
+      - name: UPX
+        uses: gacts/upx@master
+        with:
+          dir: 'output/'
+          upx_args: '-9'
+
+      - name: Cache
+        uses: actions/cache@v2.0.0
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ~/go/pkg/mod
+          # An explicit key for restoring and saving the cache
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
+          # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
+          # restore-keys: # optional
+
+
