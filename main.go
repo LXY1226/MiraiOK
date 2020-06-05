@@ -60,6 +60,7 @@ func main() {
 	go checkJava()
 	_, err := os.Open(".noupdate")
 	if checkWrapper(); args[1] != "" || err != nil { //Wrapper存在且无noupdate
+		logging.INFO("开始检查更新... 也可以通过创建.noupdate文件来禁用更新")
 		wg.Add(3)
 		go updateConsole()
 		go updateWrapper()
