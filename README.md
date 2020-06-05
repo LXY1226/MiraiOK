@@ -16,6 +16,7 @@ Mirai 是一个在全平台下运行，提供 QQ Android 和 TIM PC 协议支持
 # 🎃MiraiOK 
 取名于Mirai OneKey，前身为MiraiGo。  
 一个用于启动wrapper的wrapper ~~(套娃狂魔)~~ 但是使其易用许多
+##### ~~sa~一起进入mirai的世界吧~~~  
 ![Compile MiraiOK](https://github.com/LXY1226/miraiOK/workflows/Compile%20MiraiOK/badge.svg)
 
 
