@@ -35,13 +35,13 @@ func updateMirai() {
 	wg.Add(3)
 	for _, info := range verinfos {
 		go func(info Verinfo) {
+			defer wg.Done()
 			fname := info.Name + "-" + info.Version + ".jar"
 			if _, err := os.Stat(info.Path + fname); err == nil {
 				return
 			}
 			logging.INFO("正在更新", info.Name, "到", info.Version, "发布于", info.Date.String())
 			save(downURL(info.Name+"/"+fname), info.Path+fname)
-			wg.Done()
 		}(info)
 	}
 	wg.Wait()
