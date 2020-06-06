@@ -53,10 +53,7 @@ jobs:
         run: GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
 
       - name: UPX
-        uses: gacts/upx@master
-        with:
-          dir: 'output/'
-          upx_args: '-9'
+        run: 'tools/upx output/*'
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
