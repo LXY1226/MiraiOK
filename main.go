@@ -17,9 +17,8 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
 )
-
-const WrapperVersion = "1.1.0"
 
 var javaPath = "./jre/bin/java"
 var wg = sync.WaitGroup{}
@@ -34,7 +33,7 @@ func main() {
 		}
 		var str string
 		println("按回车退出...")
-		fmt.Scan(&str)
+		_, _ = fmt.Scan(&str)
 	}()
 	if _, err := os.Stat(".DEBUG"); err == nil {
 		logging.Log2Con = logging.LogDEBUG
@@ -59,12 +58,8 @@ func main() {
 	wg.Add(1)
 	go checkJava()
 	_, err := os.Open(".noupdate")
-	if checkWrapper(); args[1] != "" || err != nil { //Wrapper存在且无noupdate
-		logging.INFO("开始检查更新... 也可以通过创建.noupdate文件来禁用更新")
-		wg.Add(3)
-		go updateConsole()
-		go updateWrapper()
-		go updateCore()
+	if checkWrapper(); args[argc] != "" || err != nil { //Wrapper存在且无noupdate
+		updateMirai()
 	}
 	wg.Wait()
 	if args[argc] == "" {
@@ -77,6 +72,7 @@ func main() {
 	cmd.Stdout = console
 	cmd.Stderr = console
 	cmd.Stdin = os.Stdin
+	time.Sleep(time.Second) // 给用户看上面介绍的时间
 	logging.INFO("启动Mirai...")
 	err = cmd.Run()
 	if err != nil {

@@ -22,6 +22,7 @@ func save(br *bufio.Reader, fname string) bool {
 	if err != nil {
 		panic(err)
 	}
+	_ = f.Close()
 	return true
 }
 
@@ -59,12 +60,14 @@ func unpackRAR(br *bufio.Reader) bool {
 	return true
 }
 
-func downURL(url string) *bufio.Reader {
-	logging.INFO("下载:", url)
-	resp, err := http.Get(url)
-	if err != nil {
-		logging.ERROR("下载出错:", err.Error())
-		return nil
+func downURL(path string) *bufio.Reader {
+	for _, uri := range repos {
+		resp, err := http.Get(uri + path)
+		if err == nil {
+			return bufio.NewReaderSize(resp.Body, 8<<20)
+		}
+		logging.DEBUG(path, "From", uri, "Error:", err.Error())
 	}
-	return bufio.NewReaderSize(resp.Body, 8<<20)
+	logging.ERROR("无法下载", path)
+	return nil
 }
