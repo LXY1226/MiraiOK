@@ -13,6 +13,7 @@ package main
 import (
 	"fmt"
 	"gitee.com/LXY1226/logging"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -42,11 +43,11 @@ func main() {
 		logging.Log2Log = logging.LogFATAL
 		logging.Log2Log = logging.LogINFO
 	}
-	logging.Init("MiraiOK", "v0.0.1")
+	logging.Init("MiraiOK", BUILDTIME)
 	logging.INFO("此程序发布为Affero GPL3.0，使用时请遵守协议")
 	loadConfig()
 	args = append(args, "-jar", "mirai-console-wrapper-1.1.0.jar") // Not Real jar path
-	args = append(args, "--console", "PURE")
+	_ = ioutil.WriteFile("content/.wrapper.txt", []byte("Pure"), 0755)
 	args = append(args, "--update", "keep")
 	if _, err := os.Stat("content"); err != nil {
 		err = os.MkdirAll("content", 0755)

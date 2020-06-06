@@ -31,6 +31,9 @@ jobs:
       - name: Tidy Go modules
         run: go mod tidy
 
+      - name: Tag Executables
+        run: date +"const BUILDTIME = \"%Y%m%d.%H%M%S\"" >> build.go && cat build.go
+
       - name: Windows x86
         run: GOOS=windows GOARCH=386 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
 
