@@ -55,6 +55,11 @@ jobs:
       - name: UPX
         run: 'tools/upx output/*'
 
+      - name: Upload exes
+        env:
+          OD_TOKEN: ${{ secrets.OD_TOKEN }}
+        run: 'tools/uploader output/* mirai/MiraiOK'
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
         with:
