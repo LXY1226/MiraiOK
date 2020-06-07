@@ -14,7 +14,7 @@ func checkJava() {
 	if checkJavaBin() {
 		return
 	}
-	unpackRAR(downURL("http://t.imlxy.net:64724/mirai-repo/jre-" + logging.RTStr + ".rar"))
+	unpackRAR(downURL("jre-" + logging.RTStr + ".rar"))
 	if checkJavaBin() {
 		return
 	}

@@ -19,7 +19,7 @@ func checkJava() {
 	f, err := exec.LookPath("java")
 	if err != nil {
 		logging.INFO("未发现JRE，准备下载...")
-		if unpackRAR(downURL("https://t.imlxy.net:64724/mirai-repo/jre-" + logging.RTStr + ".rar")) {
+		if unpackRAR(downURL("jre-" + logging.RTStr + ".rar")) {
 			return
 		}
 	} else {
