@@ -36,22 +36,22 @@ jobs:
         run: TZ='Asia/Shanghai' date +"const BUILDTIME = \"%Y%m%d.%H%M%S\"" >> build.go && cat build.go
 
       - name: Windows x86
-        run: GOOS=windows GOARCH=386 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
+        run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
 
       - name: Windows x64
-        run: GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
+        run: GOOS=windows GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
 
       - name: Linux amd64
-        run: GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
+        run: GOOS=linux GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
 
       - name: Linux arm64
-        run: GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
+        run: GOOS=linux GOARCH=arm64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
 
       - name: Linux arm
-        run: GOOS=linux GOARCH=arm go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm .
+        run: GOOS=linux GOARCH=arm go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm .
 
       - name: Darwin amd64
-        run: GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
+        run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
 
       - name: UPX
         run: 'tools/upx -9 output/*'

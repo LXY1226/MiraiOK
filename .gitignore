@@ -1,4 +1,3 @@
 files
 test*
 *.exe
-build.shadow.go
