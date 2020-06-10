@@ -50,5 +50,7 @@ linux: wget -c 下面表格的链接 && chmod +x miraiOK* && miraiOK*
 
 ## TODO
 - [ ] MiraiOK自升级  
-- [ ] 校验文件   
+- [ ] 校验文件  
+- [ ] WEB前端 
+- [ ] 插件中心  
 
