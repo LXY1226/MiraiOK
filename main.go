@@ -16,8 +16,10 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/signal"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -68,6 +70,14 @@ func main() {
 		return
 	}
 	logging.DEBUG(args...)
+	hupChan := make(chan os.Signal)
+	signal.Notify(hupChan, syscall.SIGHUP)
+	go func() {
+		for {
+			_ = <-hupChan
+			println("Mirai将被挂起但是不会停止运行")
+		}
+	}()
 	cmd := exec.Command(javaPath, args...)
 
 	cmd.Stdout = console
