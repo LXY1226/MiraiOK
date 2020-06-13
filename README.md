@@ -41,7 +41,7 @@ linux: wget -c 下面表格的链接 && chmod +x miraiOK* && miraiOK*
 |[Linux-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_amd64)|服务器用品|
 |[Linux-arm64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_arm64)|64位arm派用品|
 |[Linux-arm](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_arm)|arm派用品|
-|[Darwin-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_darwin_amd64)|MacOS用品**未测试**|
+|[Darwin-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_darwin_amd64)|MacOS用品 已测试，感谢fjh1997大佬|
 
 
 ### Tips
