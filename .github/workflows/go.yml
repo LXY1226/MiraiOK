@@ -59,7 +59,7 @@ jobs:
         run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
 
       - name: UPX
-        run: 'tools/upx -9 output/*'
+        run: 'tools/upx output/*'
 
       - name: Upload exes
         env:

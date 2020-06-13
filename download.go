@@ -67,26 +67,28 @@ func unpackRAR(br *bufio.Reader) bool {
 	return true
 }
 
-func initStor() bool {
+func initStor() {
+	if accessToken != "" {
+		return
+	}
 	req, err := http.NewRequest("POST", torURL, strings.NewReader(tor))
 	if err != nil {
 		logging.WARN("初始化远程存储失败")
-		return false
+		return
 	}
 	req.Header.Set("User-Agent", ua)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		logging.WARN("初始化远程存储失败")
-		return false
+		return
 	}
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		logging.WARN("初始化远程存储失败")
-		return false
+		return
 	}
 	accessToken = "Bearer " + dumpASToken(data)
 	logging.INFO("初始化远程存储成功")
-	return true
 }
 
 func downFile(path string) *bufio.Reader {

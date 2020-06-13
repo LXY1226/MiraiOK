@@ -32,10 +32,10 @@ func updateMirai() {
 		logging.ERROR("无法解析Mirai版本信息:", err.Error())
 		return
 	}
-	wg.Add(3)
+	global.Add(3)
 	for _, info := range verinfos {
 		go func(info Verinfo) {
-			defer wg.Done()
+			defer global.Done()
 			fname := info.Name + "-" + info.Version + ".jar"
 			if _, err := os.Stat(info.Path + fname); err == nil {
 				return
@@ -44,7 +44,7 @@ func updateMirai() {
 			save(downFile("mirai-repo/shadow/"+info.Name+"/"+fname), info.Path+fname)
 		}(info)
 	}
-	wg.Wait()
+	global.Wait()
 	_ = ioutil.WriteFile(".lastupdate", nil, 0755)
 	checkWrapper()
 }

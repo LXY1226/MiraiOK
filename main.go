@@ -26,7 +26,7 @@ import (
 )
 
 var javaPath = "./jre/bin/java"
-var wg = sync.WaitGroup{}
+var global = sync.WaitGroup{}
 var args []string
 
 var argc = 1
@@ -62,21 +62,20 @@ func main() {
 			return
 		}
 	}
-	wg.Add(1)
-	go checkJava()
 	arg0, _ = osext.Executable()
+	checkJava()
 	_, err := os.Open(".noupdate")
 	if checkWrapper(); args[argc] != "" || err != nil { //Wrapper存在且无noupdate
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
 			initStor()
+			go updateSelf()
 			updateMirai()
-			updateSelf()
 		} else {
 			logging.INFO("删除.lastupdate来在下次强制检查更新")
 		}
 	}
-	wg.Wait()
+	global.Wait()
 	if args[argc] == "" {
 		logging.ERROR("有一个或多个文件无法获取，即将退出...")
 		return
@@ -134,7 +133,6 @@ func updateSelf() {
 			return
 		}
 		url := "mirai/MiraiOK/miraiOK_" + runtime.GOOS + "_" + runtime.GOARCH
-
 		if runtime.GOOS == "windows" {
 			url += ".exe"
 		}

@@ -9,7 +9,7 @@ import (
 )
 
 func checkJava() {
-	defer wg.Done()
+	defer global.Done()
 	//检测本地java
 	if checkJavaBin() {
 		return
