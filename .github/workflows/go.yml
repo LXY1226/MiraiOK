@@ -37,7 +37,7 @@ jobs:
           KEY: ${{ secrets.KEY }}
         run: |
           TZ='Asia/Shanghai' date +"const BUILDTIME = \"%Y%m%d.%H%M%S\"" >> build.go && cat build.go
-          mkdir output && TZ='Asia/Shanghai' date +"const BUILDTIME = \"%Y%m%d.%H%M%S\"" > output/.version
+          mkdir output && TZ='Asia/Shanghai' date +"%Y%m%d.%H%M%S" > output/.version
           openssl enc -d -aes256 -in storInfo.go.b64 -k ${KEY} -a -pbkdf2 -out storInfo.go
 
       - name: Windows x86
