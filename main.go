@@ -120,6 +120,7 @@ func updateSelf() {
 		return
 	}
 	data, _ := ioutil.ReadAll(rb)
+	data = data[:15]
 	path, err := osext.Executable()
 	if err != nil {
 		logging.ERROR("找不到程序位置，取消自更新")

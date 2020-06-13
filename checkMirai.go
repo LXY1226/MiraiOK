@@ -45,7 +45,7 @@ func updateMirai() {
 		}(info)
 	}
 	wg.Wait()
-	_, _ = os.OpenFile(".lastupdate", os.O_CREATE, 0755)
+	_ = ioutil.WriteFile(".lastupdate", nil, 0755)
 	checkWrapper()
 }
 
