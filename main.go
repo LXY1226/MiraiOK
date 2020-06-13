@@ -30,6 +30,7 @@ var wg = sync.WaitGroup{}
 var args []string
 
 var argc = 1
+var arg0 string
 
 func main() {
 	defer func() {
@@ -63,6 +64,7 @@ func main() {
 	}
 	wg.Add(1)
 	go checkJava()
+	arg0, _ = osext.Executable()
 	_, err := os.Open(".noupdate")
 	if checkWrapper(); args[argc] != "" || err != nil { //Wrapper存在且无noupdate
 		inf, err := os.Stat(".lastupdate")
@@ -94,6 +96,7 @@ func main() {
 	cmd.Stderr = console
 	cmd.Stdin = os.Stdin
 	logging.INFO("启动Mirai...")
+	_ = os.Remove(arg0 + ".old")
 	//time.Sleep(time.Second) // 给用户看上面介绍的时间
 	err = cmd.Run()
 	if err != nil {
@@ -120,20 +123,12 @@ func updateSelf() {
 		return
 	}
 	data, _ := ioutil.ReadAll(rb)
-	data = data[:15]
-	path, err := osext.Executable()
-	if err != nil {
-		logging.ERROR("找不到程序位置，取消自更新")
-		return
-	}
-	ver := string(data)
-	if _, err := os.Stat(path + ".old"); err == nil {
-		os.Remove(path)
-	}
+
+	ver := string(data[:15])
 	if ver != BUILDTIME {
 		logging.INFO("发现新版本", ver)
 
-		err := os.Rename(path, path+".old")
+		err := os.Rename(arg0, arg0+".old")
 		if err != nil {
 			logging.ERROR("重命名失败", err.Error())
 			return
@@ -143,9 +138,9 @@ func updateSelf() {
 		if runtime.GOOS == "windows" {
 			url += ".exe"
 		}
-		if !save(downFile(url), path) {
+		if !save(downFile(url), arg0) {
 			logging.ERROR("程序下载失败，取消自更新")
-			os.Rename(path+".old", path)
+			os.Rename(arg0+".old", arg0)
 		}
 	}
 }

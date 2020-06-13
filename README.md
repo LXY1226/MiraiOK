@@ -31,6 +31,7 @@ linux: wget -c 下面表格的链接 && chmod +x miraiOK* && miraiOK*
 - [x] 自动更新mirai运行需要的东西
 - [x] 一球人需要的自动登录
 - [x] Actions自动推送到oss便于下载
+- [x] MiraiOK自升级 
 
 #### 下载地址
 |系统|备注|
@@ -48,8 +49,7 @@ linux: wget -c 下面表格的链接 && chmod +x miraiOK* && miraiOK*
 修改`config.txt`来使用Mirai自带的自动登录  
 
 
-## TODO
-- [ ] MiraiOK自升级  
+## TODO 
 - [ ] 校验文件  
 - [ ] WEB前端 
 - [ ] 插件中心  
