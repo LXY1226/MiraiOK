@@ -36,6 +36,7 @@ func main() {
 		}
 		var str string
 		println("按回车退出...")
+		println("尝试访问gitee.com/LXY1226/MiraiOK试试更新一下？")
 		_, _ = fmt.Scan(&str)
 	}()
 	if _, err := os.Stat(".DEBUG"); err == nil {
@@ -46,7 +47,7 @@ func main() {
 		logging.Log2Log = logging.LogINFO
 	}
 	logging.Init("MiraiOK", BUILDTIME)
-	logging.INFO("此程序发布为Affero GPL3.0，使用时请遵守协议")
+	logging.INFO("此程序以Affero GPL3.0协议发布，使用时请遵守协议")
 	loadConfig()
 	args = append(args, "-jar", "mirai-console-wrapper-1.1.0.jar") // Not Real jar path
 	_ = ioutil.WriteFile("content/.wrapper.txt", []byte("Pure"), 0755)
@@ -62,7 +63,12 @@ func main() {
 	go checkJava()
 	_, err := os.Open(".noupdate")
 	if checkWrapper(); args[argc] != "" || err != nil { //Wrapper存在且无noupdate
-		updateMirai()
+		inf, err := os.Stat(".lastupdate")
+		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
+			updateMirai()
+		} else {
+			logging.INFO("删除.lastupdate来在下次强制检查更新")
+		}
 	}
 	wg.Wait()
 	if args[argc] == "" {
@@ -83,8 +89,8 @@ func main() {
 	cmd.Stdout = console
 	cmd.Stderr = console
 	cmd.Stdin = os.Stdin
-	time.Sleep(time.Second) // 给用户看上面介绍的时间
 	logging.INFO("启动Mirai...")
+	//time.Sleep(time.Second) // 给用户看上面介绍的时间
 	err = cmd.Run()
 	if err != nil {
 		panic(err)

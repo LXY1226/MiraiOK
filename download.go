@@ -10,6 +10,8 @@ import (
 	"path"
 )
 
+const UA = "MiraiOK|" + BUILDTIME + "|" + logging.RTStr
+
 func save(br *bufio.Reader, fname string) bool {
 	if br == nil {
 		return false
@@ -62,9 +64,14 @@ func unpackRAR(br *bufio.Reader) bool {
 
 func downURL(path string) *bufio.Reader {
 	for _, uri := range repos {
-		resp, err := http.Get(uri + path)
+		req, err := http.NewRequest("GET", uri+path, nil)
+		if err != nil {
+			continue
+		}
+		req.Header.Set("User-Agent", UA)
+		resp, err := http.DefaultClient.Do(req)
 		if err == nil {
-			return bufio.NewReaderSize(resp.Body, 8<<20)
+			return bufio.NewReaderSize(resp.Body, 1<<20)
 		}
 		logging.DEBUG(path, "From", uri, "Error:", err.Error())
 	}
