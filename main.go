@@ -13,10 +13,12 @@ package main
 import (
 	"fmt"
 	"gitee.com/LXY1226/logging"
+	"github.com/kardianos/osext"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/signal"
+	"runtime"
 	"strings"
 	"sync"
 	"syscall"
@@ -36,7 +38,7 @@ func main() {
 		}
 		var str string
 		println("按回车退出...")
-		println("尝试访问gitee.com/LXY1226/MiraiOK试试更新一下？")
+		println("尝试访问 gitee.com/LXY1226/MiraiOK 重新下载？")
 		_, _ = fmt.Scan(&str)
 	}()
 	if _, err := os.Stat(".DEBUG"); err == nil {
@@ -65,7 +67,9 @@ func main() {
 	if checkWrapper(); args[argc] != "" || err != nil { //Wrapper存在且无noupdate
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
+			initStor()
 			updateMirai()
+			updateSelf()
 		} else {
 			logging.INFO("删除.lastupdate来在下次强制检查更新")
 		}
@@ -107,4 +111,40 @@ func checkWrapper() {
 		}
 	}
 	args[argc] = ""
+}
+
+func updateSelf() {
+	rb := downFile("mirai/MiraiOK/.version")
+	if rb == nil {
+		logging.ERROR("无法下载MiraiOK版本信息")
+		return
+	}
+	data, _ := ioutil.ReadAll(rb)
+	path, err := osext.Executable()
+	if err != nil {
+		logging.ERROR("找不到程序位置，取消自更新")
+		return
+	}
+	ver := string(data)
+	if _, err := os.Stat(path + ".old"); err == nil {
+		os.Remove(path)
+	}
+	if ver != BUILDTIME {
+		logging.INFO("发现新版本", ver)
+
+		err := os.Rename(path, path+".old")
+		if err != nil {
+			logging.ERROR("重命名失败", err.Error())
+			return
+		}
+		url := "mirai/MiraiOK/miraiOK_" + runtime.GOOS + "_" + runtime.GOARCH
+
+		if runtime.GOOS == "windows" {
+			url += ".exe"
+		}
+		if !save(downFile(url), path) {
+			logging.ERROR("程序下载失败，取消自更新")
+			os.Rename(path+".old", path)
+		}
+	}
 }

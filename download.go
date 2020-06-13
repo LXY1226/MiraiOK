@@ -2,15 +2,20 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"gitee.com/LXY1226/logging"
 	rar "github.com/nwaples/rardecode"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
+	"strings"
 )
 
 const UA = "MiraiOK|" + BUILDTIME + "|" + logging.RTStr
+
+var accessToken string
 
 func save(br *bufio.Reader, fname string) bool {
 	if br == nil {
@@ -62,19 +67,57 @@ func unpackRAR(br *bufio.Reader) bool {
 	return true
 }
 
-func downURL(path string) *bufio.Reader {
-	for _, uri := range repos {
-		req, err := http.NewRequest("GET", uri+path, nil)
-		if err != nil {
-			continue
-		}
-		req.Header.Set("User-Agent", UA)
-		resp, err := http.DefaultClient.Do(req)
-		if err == nil {
-			return bufio.NewReaderSize(resp.Body, 1<<20)
-		}
-		logging.DEBUG(path, "From", uri, "Error:", err.Error())
+func initStor() bool {
+	req, err := http.NewRequest("POST", torURL, strings.NewReader(tor))
+	if err != nil {
+		logging.WARN("初始化远程存储失败")
+		return false
 	}
-	logging.ERROR("无法下载", path)
-	return nil
+	req.Header.Set("User-Agent", ua)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		logging.WARN("初始化远程存储失败")
+		return false
+	}
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		logging.WARN("初始化远程存储失败")
+		return false
+	}
+	accessToken = "Bearer " + dumpASToken(data)
+	logging.INFO("初始化远程存储成功")
+	return true
+}
+
+func downFile(path string) *bufio.Reader {
+	req, err := http.NewRequest("GET", dowURL+path+":/content", nil)
+	if err != nil {
+		logging.WARN("URL初始化失败", path)
+		return nil
+	}
+	req.Header.Set("User-Agent", ua)
+	req.Header.Set("Authorization", accessToken)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		logging.WARN("访问远程存储失败")
+		return nil
+	}
+	if resp.StatusCode != 200 {
+		logging.WARN("下载失败", path)
+		return nil
+	}
+	return bufio.NewReaderSize(resp.Body, 1<<20)
+}
+
+func dumpASToken(data []byte) string {
+	i := bytes.Index(data, []byte(`"access_token":"`))
+	if i == -1 {
+		return ""
+	}
+	data = data[i+16:]
+	j := bytes.Index(data, []byte(`"`))
+	if j == -1 {
+		return ""
+	}
+	return string(data[:j])
 }
