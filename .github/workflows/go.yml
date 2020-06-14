@@ -36,9 +36,11 @@ jobs:
         env:
           KEY: ${{ secrets.KEY }}
         run: |
-          TZ='Asia/Shanghai' date +"const BUILDTIME = \"%Y%m%d.%H%M%S\"" >> build.go && cat build.go
-          mkdir output && TZ='Asia/Shanghai' date +"%Y%m%d.%H%M%S" > output/.version
-          openssl enc -d -aes256 -in storInfo -k ${KEY} -a -pbkdf2 -out storInfo.go
+          export TZ='Asia/Shanghai'
+          export TIME=`date +"%Y%m%d.%H%M%S"`
+          echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
+          mkdir output && echo ${TIME} > output/.version
+          openssl enc -d -aes256 -in storInfo -k ${KEY} -pbkdf2 -out storInfo.go
 
       - name: Windows x86
         run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
@@ -64,7 +66,7 @@ jobs:
       - name: Upload exes
         env:
           OD_TOKEN: ${{ secrets.OD_TOKEN }}
-        run: 'tools/uploader_linux /mirai/MiraiOK output/'
+        run: 'tools/uploader_linux output/* /mirai/MiraiOK'
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
