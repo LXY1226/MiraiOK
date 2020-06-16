@@ -7,3 +7,5 @@ import (
 )
 
 var console = transform.NewWriter(ansi.NewAnsiStdout(), simplifiedchinese.GBK.NewDecoder())
+
+func noStop() {}

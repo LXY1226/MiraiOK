@@ -17,11 +17,9 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"os/signal"
 	"runtime"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
 )
 
@@ -58,7 +56,7 @@ func main() {
 	if _, err := os.Stat("content"); err != nil {
 		err = os.MkdirAll("content", 0755)
 		if err != nil {
-			logging.ERROR("无法创建目录content:", err.Error())
+			logging.ERROR("无法创建目录content", err.Error())
 			return
 		}
 	}
@@ -81,14 +79,7 @@ func main() {
 		return
 	}
 	logging.DEBUG(args...)
-	hupChan := make(chan os.Signal)
-	signal.Notify(hupChan, syscall.SIGHUP)
-	go func() {
-		for {
-			_ = <-hupChan
-			println("Mirai将被挂起但是不会停止运行")
-		}
-	}()
+	go noStop()
 	cmd := exec.Command(javaPath, args...)
 
 	cmd.Stdout = console

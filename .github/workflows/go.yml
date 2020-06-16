@@ -35,8 +35,8 @@ jobs:
       - name: Tag Executables
         env:
           KEY: ${{ secrets.KEY }}
+          TZ: Asia/Shanghai
         run: |
-          export TZ='Asia/Shanghai'
           export TIME=`date +"%Y%m%d.%H%M%S"`
           echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
           mkdir output && echo ${TIME} > output/.version

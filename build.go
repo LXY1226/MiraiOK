@@ -2,4 +2,4 @@
 
 package main
 
-// Build Time & Token Here
+// Build Time Here
