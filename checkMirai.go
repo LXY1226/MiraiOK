@@ -10,13 +10,6 @@ import (
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-var repos = []string{
-	"http://t.imlxy.net:64724/mirai-repo/shadow/",
-	"https://gitee.com/LXY1226/mirai-repo/raw/master/shadow/",
-	"https://raw.githubusercontent.com/mamoe/mirai-repo/master/shadow/",
-	"https://mamoe.github.io/mirai-repo/shadow/",
-}
-
 var verinfos []Verinfo
 
 func updateMirai() {

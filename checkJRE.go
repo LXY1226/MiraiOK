@@ -15,20 +15,21 @@ func checkJava() {
 		return
 	}
 	f, err := exec.LookPath("java")
-	global.Add(1)
+	if err == nil {
+		javaPath = f
+		if checkJavaBin() {
+			return
+		}
+	}
+	logging.INFO("未发现JRE，准备下载...")
 	initStor()
+	global.Add(1)
 	go func() {
-		if err != nil {
-			logging.INFO("未发现JRE，准备下载...")
-			if unpackRAR(downFile("mirai-repo/shadow/jre-" + logging.RTStr + ".rar")) {
+		if unpackRAR(downFile("mirai-repo/shadow/jre-" + logging.RTStr + ".rar")) {
+			if checkJavaBin() {
+				global.Done()
 				return
 			}
-		} else {
-			javaPath = f
-		}
-		if checkJavaBin() {
-			global.Done()
-			return
 		}
 		logging.FATAL("无法获取JRE，即将退出...")
 		panic("error in gathering JRE")

@@ -50,7 +50,7 @@ func main() {
 	logging.Init("MiraiOK", BUILDTIME)
 	logging.INFO("此程序以Affero GPL3.0协议发布，使用时请遵守协议")
 	loadConfig()
-	args = append(args, "-jar", "mirai-console-wrapper-1.1.0.jar") // Not Real jar path
+	args = append(args, "-jar", "") // Not Real jar path
 	_ = ioutil.WriteFile("content/.wrapper.txt", []byte("Pure"), 0755)
 	args = append(args, "--update", "keep")
 	if _, err := os.Stat("content"); err != nil {
@@ -63,7 +63,7 @@ func main() {
 	arg0, _ = osext.Executable()
 	checkJava()
 	_, err := os.Open(".noupdate")
-	if checkWrapper(); args[argc] != "" || err != nil { //Wrapper存在且无noupdate
+	if checkWrapper(); args[1] != "" || err != nil { //Wrapper存在且无noupdate
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
 			initStor()
@@ -84,7 +84,7 @@ func main() {
 
 	cmd.Stdout = console
 	cmd.Stderr = console
-	cmd.Stdin = os.Stdin
+	cmd.Stdin = loginCommand
 	logging.INFO("启动Mirai...")
 	_ = os.Remove(arg0 + ".old")
 	//time.Sleep(time.Second) // 给用户看上面介绍的时间
