@@ -98,6 +98,9 @@ func initStor() {
 }
 
 func downFile(path string) *bufio.Reader {
+	if accessToken == "" {
+		return nil
+	}
 	req, err := http.NewRequest("GET", dowURL+path+":/content", nil)
 	if err != nil {
 		logging.WARN("URL初始化失败", path)

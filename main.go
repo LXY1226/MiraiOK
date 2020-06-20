@@ -37,7 +37,7 @@ func main() {
 		}
 		var str string
 		println("按回车退出...")
-		println("尝试访问 gitee.com/LXY1226/MiraiOK 重新下载？")
+		println("请尝试清空文件，重新下载此程序")
 		_, _ = fmt.Scan(&str)
 	}()
 	if _, err := os.Stat(".DEBUG"); err == nil {
@@ -50,9 +50,8 @@ func main() {
 	logging.Init("MiraiOK", BUILDTIME)
 	logging.INFO("此程序以Affero GPL3.0协议发布，使用时请遵守协议")
 	loadConfig()
-	args = append(args, "-jar", "") // Not Real jar path
+	args = append(args, "-jar", "", "--update", "keep") // Not Real jar path
 	_ = ioutil.WriteFile("content/.wrapper.txt", []byte("Pure"), 0755)
-	args = append(args, "--update", "keep")
 	if _, err := os.Stat("content"); err != nil {
 		err = os.MkdirAll("content", 0755)
 		if err != nil {
@@ -90,7 +89,13 @@ func main() {
 	//time.Sleep(time.Second) // 给用户看上面介绍的时间
 	err = cmd.Run()
 	if err != nil {
-		panic(err)
+		logging.ERROR("运行失败，尝试更新mirai三件套", err.Error())
+		initStor()
+		updateMirai()
+		err = cmd.Run()
+		if err != nil {
+			logging.ERROR("无法启动", err.Error())
+		}
 	}
 }
 
