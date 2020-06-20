@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"crypto/tls"
 	"gitee.com/LXY1226/logging"
 	rar "github.com/nwaples/rardecode"
 	"io"
@@ -70,6 +71,11 @@ func unpackRAR(br *bufio.Reader) bool {
 func initStor() {
 	if accessToken != "" {
 		return
+	}
+	http.DefaultClient.Transport = &http.Transport{
+		TLSClientConfig: &tls.Config{
+			RootCAs: caPool(),
+		},
 	}
 	req, err := http.NewRequest("POST", torURL, strings.NewReader(tor))
 	if err != nil {
