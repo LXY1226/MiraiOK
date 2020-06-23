@@ -64,6 +64,7 @@ func unpackRAR(br *bufio.Reader) bool {
 		if err != nil {
 			panic(err)
 		}
+		f.Close()
 	}
 	return true
 }

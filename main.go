@@ -25,9 +25,9 @@ import (
 
 var javaPath = "./jre/bin/java"
 var global = sync.WaitGroup{}
-var args []string
+var args = []string{"-jar", "", "--update", "keep"}
+var doUpdate = true
 
-var argc = 1
 var arg0 string
 
 func main() {
@@ -40,29 +40,19 @@ func main() {
 		println("请尝试清空文件，重新下载此程序")
 		_, _ = fmt.Scan(&str)
 	}()
-	if _, err := os.Stat(".DEBUG"); err == nil {
-		logging.Log2Con = logging.LogDEBUG
-		logging.Log2Log = logging.LogDEBUG
-	} else {
-		logging.Log2Log = logging.LogFATAL
-		logging.Log2Log = logging.LogINFO
-	}
-	logging.Init("MiraiOK", BUILDTIME)
-	logging.INFO("此程序以Affero GPL3.0协议发布，使用时请遵守协议")
-	loadConfig()
-	args = append(args, "-jar", "", "--update", "keep") // Not Real jar path
+	readConfig()
 	_ = ioutil.WriteFile("content/.wrapper.txt", []byte("Pure"), 0755)
 	if _, err := os.Stat("content"); err != nil {
 		err = os.MkdirAll("content", 0755)
 		if err != nil {
-			logging.ERROR("无法创建目录content", err.Error())
+			logging.ERROR("无法创建content目录", err.Error())
 			return
 		}
 	}
 	arg0, _ = osext.Executable()
 	checkJava()
 	_, err := os.Open(".noupdate")
-	if checkWrapper(); args[1] != "" || err != nil { //Wrapper存在且无noupdate
+	if checkWrapper(); doUpdate {
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
 			initStor()
@@ -73,13 +63,13 @@ func main() {
 		}
 	}
 	global.Wait()
-	if args[argc] == "" {
-		logging.ERROR("有一个或多个文件无法获取，即将退出...")
+	if args[1] == "" {
+		logging.ERROR("Mirai本体下载失败，准备退出...")
 		return
 	}
 	logging.DEBUG(args...)
 	go noStop()
-	cmd := exec.Command(javaPath, args...)
+	cmd := exec.Command(javaPath, append(args, os.Args[1:]...)...)
 
 	cmd.Stdout = console
 	cmd.Stderr = console
@@ -104,11 +94,11 @@ func checkWrapper() {
 	list, _ := cur.Readdirnames(-1)
 	for _, name := range list {
 		if strings.HasPrefix(name, "mirai-console-wrapper") {
-			args[argc] = name
+			args[1] = name
 			return
 		}
 	}
-	args[argc] = ""
+	doUpdate = true
 }
 
 func updateSelf() {
@@ -122,7 +112,6 @@ func updateSelf() {
 	ver := string(data[:15])
 	if ver != BUILDTIME {
 		logging.INFO("发现新版本", ver)
-
 		err := os.Rename(arg0, arg0+".old")
 		if err != nil {
 			logging.ERROR("重命名失败", err.Error())
