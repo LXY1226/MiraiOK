@@ -14,6 +14,7 @@ func checkJava() {
 	if checkJavaBin() {
 		return
 	}
+initStor()
 	unpackRAR(downFile("mirai-repo/shadow/jre-" + logging.RTStr + ".rar"))
 	if checkJavaBin() {
 		return
