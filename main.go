@@ -55,7 +55,6 @@ func main() {
 	if checkWrapper(); doUpdate {
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
-			initStor()
 			go updateSelf()
 			updateMirai()
 		} else {
@@ -80,7 +79,6 @@ func main() {
 	err = cmd.Run()
 	if err != nil {
 		logging.ERROR("运行失败，尝试更新mirai三件套", err.Error())
-		initStor()
 		updateMirai()
 		err = cmd.Run()
 		if err != nil {

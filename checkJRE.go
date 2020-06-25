@@ -22,7 +22,6 @@ func checkJava() {
 		}
 	}
 	logging.INFO("未发现JRE，准备下载...")
-	initStor()
 	global.Add(1)
 	go func() {
 		if unpackRAR(downFile("mirai-repo/shadow/jre-" + logging.RTStr + ".rar")) {

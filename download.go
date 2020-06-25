@@ -12,11 +12,13 @@ import (
 	"os"
 	"path"
 	"strings"
+	"sync"
 )
 
 const UA = "MiraiOK|" + BUILDTIME + "|" + logging.RTStr
 
 var accessToken string
+var Stor sync.Once
 
 func save(br *bufio.Reader, fname string) bool {
 	if br == nil {
@@ -70,9 +72,6 @@ func unpackRAR(br *bufio.Reader) bool {
 }
 
 func initStor() {
-	if accessToken != "" {
-		return
-	}
 	http.DefaultClient.Transport = &http.Transport{
 		TLSClientConfig: &tls.Config{
 			RootCAs: caPool(),
@@ -99,6 +98,7 @@ func initStor() {
 }
 
 func downFile(path string) *bufio.Reader {
+	Stor.Do(initStor)
 	if accessToken == "" {
 		return nil
 	}
