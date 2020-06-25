@@ -9,12 +9,12 @@ import (
 )
 
 func checkJava() {
-	defer global.Done()
+	//defer global.Done()
 	//检测本地java
 	if checkJavaBin() {
 		return
 	}
-initStor()
+	initStor()
 	unpackRAR(downFile("mirai-repo/shadow/jre-" + logging.RTStr + ".rar"))
 	if checkJavaBin() {
 		return
