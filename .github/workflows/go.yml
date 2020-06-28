@@ -26,6 +26,14 @@ jobs:
         uses: actions/cache@v2
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
+          path: test/
+          key: MiraiOK-${{ hashFiles('test/device.json') }}
+
+      - name: Cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
 
@@ -35,12 +43,14 @@ jobs:
       - name: Tag Executables
         env:
           KEY: ${{ secrets.KEY }}
+          BotInfo: ${{ secrets.BotInfo }}
           TZ: Asia/Shanghai
         run: |
           export TIME=`date +"%Y%m%d.%H%M%S"`
           echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
           mkdir output && echo ${TIME} > output/.version
           openssl enc -d -aes256 -in storInfo -k ${KEY} -pbkdf2 -out storInfo.go
+          echo -e "----------\nlogin ${BotInfo}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
 
       - name: Windows x86
         run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
@@ -59,6 +69,9 @@ jobs:
 
       - name: Darwin amd64
         run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
+
+      - name: Echo
+        run: cd test && go test -v ../... && rm config.txt && cd ..
 
       - name: UPX
         run: 'tools/upx output/*'

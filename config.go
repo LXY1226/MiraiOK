@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"gitee.com/LXY1226/logging"
 	"io/ioutil"
 	"os"
@@ -8,89 +9,101 @@ import (
 	"time"
 )
 
-const configTemplate = "#DEBUG\n#NOUPDATE\n#以#号开头的行会被忽略，所有有效配置会被使用\n" +
-	"#请不要在各种地方填空格，空格也会当作变量的一部分\n" +
-	"#QQ号,密码\n\n" +
-	"#123456789,TestMiraiOK"
+const configTemplate = "#DEBUG\n#NOUPDATE\n" +
+	"#在----------下面可以添加需要在每次启动时输入得指令\n" +
+	"#请注意，指令部分中#并不起效，miraiOK会原样输入到console\n" +
+	"例如:\n" +
+	"login 123456789 TestMiraiOK\n" +
+	"say 655057127 MiraiOK_published!\n" +
+	"----------\n"
 
-type loginCommands struct {
-	buf   []byte
-	drain bool
-}
+//type loginCommands struct {
+//	buf   []byte
+//	drain bool
+//}
 
-var loginCommand = loginCommands{
-	buf:   make([]byte, 256)[:0],
-	drain: false,
-}
+type loginCommands []byte
+
+var loginCommand loginCommands
 
 func (loginCommands) Read(p []byte) (n int, err error) {
-	if !loginCommand.drain {
-		p = append(p[:0], loginCommand.buf...)
-		//p = loginCommand.buf
-		loginCommand.drain = true
-		return len(p), nil
+	if loginCommand != nil {
+		n = len(loginCommand)
+		copy(p, loginCommand)
+		loginCommand = nil
+		return n, nil
 	} else {
 		return os.Stdin.Read(p)
 	}
-}
-
-func (loginCommands) WriteAccount(QQ, Password string) {
-	logging.INFO("用户", QQ, "已载入")
-	loginCommand.buf = append(loginCommand.buf, "login "...)
-	loginCommand.buf = append(loginCommand.buf, QQ...)
-	loginCommand.buf = append(loginCommand.buf, ' ')
-	loginCommand.buf = append(loginCommand.buf, Password...)
-	loginCommand.buf = append(loginCommand.buf, '\n')
 }
 
 func readConfig() {
 	logging.Log2Con = logging.LogINFO
 	logging.Log2Log = logging.LogERROR
 	data, err := ioutil.ReadFile("config.txt")
-	var lines []string
-	var isOldConf = true // 会在一个月后[2020/07/23]移除
+	var isOldConf = true // 会在一个月后[2020/07/28]移除
 	if err == nil {
-		lines = strings.Split(string(data), "\n")
-		for _, line := range lines {
-			if line == "DEBUG" {
-				logging.Log2Con = logging.LogDEBUG
-				logging.Log2Log = logging.LogDEBUG
-				isOldConf = false
-				break
-			} else if line == "#DEBUG" {
-				isOldConf = false
+		pos := 0
+		next := 0
+	preConf:
+		for {
+			next = bytes.IndexByte(data[pos:], '\n')
+			if next == -1 {
 				break
 			}
+			next += pos
+			if data[pos] == '#' {
+				goto end
+			}
+			switch string(data[pos:next]) {
+			case "DEBUG":
+				logging.Log2Con = logging.LogDEBUG
+				logging.Log2Log = logging.LogDEBUG
+			case "NOUPDATE":
+				doUpdate = false
+			case "----------":
+				isOldConf = false
+				loginCommand = data[next+1:]
+				break preConf
+			}
+		end:
+			pos = next + 1
+
 		}
 	}
 	logging.Init("MiraiOK", BUILDTIME)
 	logging.INFO("此程序以Affero GPL3.0协议发布，使用时请遵守协议")
+	logging.INFO("代码库: github.com/LXY1226/MiraiOK gitee.com/LXY1226/MiraiOK")
 	logging.DEBUG("如你所愿开启MiraiOK调试输出")
+	if !doUpdate {
+		logging.INFO("如你所愿不会更新Mirai本体")
+	}
 	if err == nil {
-		lines = strings.Split(string(data), "\n")
-		for _, line := range lines {
-			switch true {
-			case len(line) == 0:
-				continue
-			case line[0] == '#':
-				continue
-			case line == "NOUPDATE":
-				logging.INFO("如你所愿不会更新Mirai本体")
-				doUpdate = false
-			}
-			i := strings.Index(line, ",")
-			if i == -1 {
-				i = strings.Index(line, "，")
-				i++
-			}
-			if i > 0 {
-				loginCommand.WriteAccount(line[:i], line[i+1:])
-			}
-		}
 		if isOldConf {
-			logging.INFO("检测到旧版配置，将会写入新配置项，建议查看文件内的相关改动")
-			err := ioutil.WriteFile("config.txt", append([]byte("#DEBUG\n#NOUPDATE\n"), data...), 0755)
-			if err != nil {
+			loginCommand = make([]byte, 256)[:0]
+			logging.INFO("检测到旧版配置，备份至config.bak.txt")
+			logging.INFO("账号会迁移至新config.txt，建议查看文件内的相关改动")
+			for _, line := range strings.Split(string(data), "\n") {
+				if len(line) == 0 || line[0] == '#' {
+					continue
+				}
+				i := strings.Index(line, ",")
+				if i == -1 {
+					i = strings.Index(line, "，")
+					i++
+				}
+				if i > 0 {
+					logging.INFO("用户", line[:i], "已迁移")
+					loginCommand = append(loginCommand, "login "...)
+					loginCommand = append(loginCommand, line[:i]...)
+					loginCommand = append(loginCommand, ' ')
+					loginCommand = append(loginCommand, line[i+1:]...)
+					loginCommand = append(loginCommand, '\n')
+				}
+			}
+			if err := os.Rename("config.txt", "config.bak.txt"); err != nil {
+				logging.WARN("无法移动config.txt至config.bak.txt", err.Error())
+			} else if err := ioutil.WriteFile("config.txt", append([]byte(configTemplate), loginCommand...), 0755); err != nil {
 				logging.WARN("无法写入新配置文件模板:", err.Error())
 			}
 			logging.INFO("五秒后继续...")
