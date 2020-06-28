@@ -68,7 +68,7 @@ func main() {
 	}
 	logging.DEBUG(args...)
 	go noStop()
-	cmd := exec.Command(javaPath, append(args, os.Args[1:]...)...)
+	cmd := exec.Command(javaPath, args...)
 	//cmd.Env = append(cmd.Env, "JAVAPATH=xxxxx")
 	cmd.Stdout = console
 	cmd.Stderr = console
