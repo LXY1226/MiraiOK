@@ -54,7 +54,7 @@ jobs:
 
       - name: Linux Test
         run: |
-          go.exe test -c -i -o test/MiraiOK-test .
+          go test -c -i -o test/MiraiOK-test .
           cd test && ./MiraiOK-test -test.v -test.run ^$ && rm config.txt && cd ..
 
       - name: Windows x86
