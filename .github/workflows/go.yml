@@ -22,7 +22,7 @@ jobs:
           go-version: '1.14.3' # The Go version to download (if necessary) and use.
 
       - name: Cache
-        id: cache
+        id: cache-Mirai
         uses: actions/cache@v2
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
