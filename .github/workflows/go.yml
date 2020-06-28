@@ -43,14 +43,14 @@ jobs:
       - name: Tag Executables
         env:
           KEY: ${{ secrets.KEY }}
-          BotInfo: ${{ secrets.BotInfo }}
+          BOTINFO: ${{ secrets.BOTINFO }}
           TZ: Asia/Shanghai
         run: |
           export TIME=`date +"%Y%m%d.%H%M%S"`
           echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
           mkdir output && echo ${TIME} > output/.version
           openssl enc -d -aes256 -in storInfo -k ${KEY} -pbkdf2 -out storInfo.go
-          echo -e "----------\nlogin ${BotInfo}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
+          echo -e "----------\nlogin ${BOTINFO}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
 
       - name: Windows x86
         run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
