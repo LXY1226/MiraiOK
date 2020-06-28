@@ -7,7 +7,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	time.AfterFunc(30*time.Second, func() {
+	time.AfterFunc(120*time.Second, func() {
 		os.Exit(0)
 	})
 	main()
