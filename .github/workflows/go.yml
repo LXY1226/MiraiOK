@@ -71,7 +71,9 @@ jobs:
         run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
 
       - name: Echo
-        run: cd test && go test -v ../... && rm config.txt && cd ..
+        run: |
+          go.exe test -c -i -o test/MiraiOK-test .
+          cd test && ./MiraiOK-test -test.v -test.run ^$ && rm config.txt && cd ..
 
       - name: UPX
         run: 'tools/upx output/*'
