@@ -69,6 +69,7 @@ func main() {
 	logging.DEBUG(args...)
 	go noStop()
 	cmd := exec.Command(javaPath, args...)
+	removeOld()
 	//cmd.Env = append(cmd.Env, "JAVAPATH=xxxxx")
 	cmd.Stdout = console
 	cmd.Stderr = console
@@ -85,6 +86,18 @@ func main() {
 			logging.ERROR("无法启动", err.Error())
 		}
 	}
+}
+
+func removeOld() {
+	//cur, _ := os.Open("./content")
+	//list, _ := cur.Readdirnames(-1)
+	//for _, name := range list {
+	//	if strings.HasPrefix(name, "mirai-console-wrapper") {
+	//		args[1] = name
+	//		return
+	//	}
+	//}
+	os.Rename("./content/mirai-core-qqandroid-1.0.2.jar", "mirai-core-qqandroid-1.0.2.jar.bak")
 }
 
 func checkWrapper() {

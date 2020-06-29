@@ -35,7 +35,7 @@ jobs:
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
           path: test/
-          key: MiraiOK-${{ hashFiles('test/device.json') }}
+          key: MiraiOK-v1.0.3-${{ hashFiles('test/device.json') }}
 
       - name: Tidy Go modules
         run: go mod tidy
