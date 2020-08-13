@@ -50,12 +50,12 @@ jobs:
           echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
           mkdir output && echo ${TIME} > output/.version
           openssl enc -d -aes256 -in storInfo -k ${KEY} -pbkdf2 -out storInfo.go
-          echo -e "----------\nlogin ${BOTINFO}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
+          # echo -e "----------\nlogin ${BOTINFO}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
 
-      - name: Linux Test
-        run: |
-          go test -c -i -o test/MiraiOK-test .
-          cd test && ./MiraiOK-test -test.v -test.run ^$ && rm config.txt && cd ..
+      # - name: Linux Test
+      #   run: |
+      #     go test -c -i -o test/MiraiOK-test .
+      #     cd test && ./MiraiOK-test -test.v -test.run ^$ && rm config.txt && cd ..
 
       - name: Windows x86
         run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
