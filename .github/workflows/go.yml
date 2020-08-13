@@ -1,0 +1,93 @@
+name: Compile MiraiOK
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.go'
+      - 'tools/**'
+      - '.github/workflows/**.yml'
+
+jobs:
+  my-job:
+    name: Build MiraiOK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup Golang environment
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14.3' # The Go version to download (if necessary) and use.
+
+      - name: Cache Go
+        id: cache
+        uses: actions/cache@v2
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
+
+      - name: Cache Mirai
+        id: cache-Mirai
+        uses: actions/cache@v2
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: test/
+          key: MiraiOK-v1.0.3-${{ hashFiles('test/device.json') }}
+
+      - name: Tidy Go modules
+        run: go mod tidy
+
+      - name: Tag Executables
+        env:
+          KEY: ${{ secrets.KEY }}
+          BOTINFO: ${{ secrets.BOTINFO }}
+          TZ: Asia/Shanghai
+        run: |
+          export TIME=`date +"%Y%m%d.%H%M%S"`
+          echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
+          mkdir output && echo ${TIME} > output/.version
+          openssl enc -d -aes256 -in storInfo -k ${KEY} -pbkdf2 -out storInfo.go
+          echo -e "----------\nlogin ${BOTINFO}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
+
+      - name: Linux Test
+        run: |
+          go test -c -i -o test/MiraiOK-test .
+          cd test && ./MiraiOK-test -test.v -test.run ^$ && rm config.txt && cd ..
+
+      - name: Windows x86
+        run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
+
+      - name: Windows x64
+        run: GOOS=windows GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
+
+      - name: Linux amd64
+        run: GOOS=linux GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
+
+      - name: Linux arm64
+        run: GOOS=linux GOARCH=arm64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
+
+      - name: Linux arm
+        run: GOOS=linux GOARCH=arm go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm .
+
+      - name: Darwin amd64
+        run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
+
+      - name: UPX
+        run: 'tools/upx output/*'
+
+      - name: Upload exes
+        env:
+          OD_TOKEN: ${{ secrets.OD_TOKEN }}
+        run: 'tools/uploader_linux output/* /mirai/MiraiOK'
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          # Artifact name
+          name: MiraiOK_binary
+          # A file, directory or wildcard pattern that describes what to upload
+          path: "output"
+
