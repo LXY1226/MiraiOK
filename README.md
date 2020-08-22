@@ -1,3 +1,6 @@
+# 停止维护
+原因：找到替代品
+
 <div align="center">
    <img width="160" src="assets/mirai.png" alt="logo"></br>
 
