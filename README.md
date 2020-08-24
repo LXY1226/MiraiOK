@@ -1,5 +1,6 @@
 # ~~停止维护~~ 再维护亿下
 原因：~~找到替代品~~ console出现了不兼容更新
+### 本次为不兼容更新，mirai与miraiOK均为不兼容更新，此版本将不会推送至已有版本。
 
 <div align="center">
    <img width="160" src="assets/mirai.png" alt="logo"></br>
