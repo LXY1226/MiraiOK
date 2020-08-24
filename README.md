@@ -1,5 +1,5 @@
-# 停止维护
-原因：找到替代品
+# ~~停止维护~~ 再维护亿下
+原因：~~找到替代品~~ console出现了不兼容更新
 
 <div align="center">
    <img width="160" src="assets/mirai.png" alt="logo"></br>
