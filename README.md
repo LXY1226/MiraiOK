@@ -39,7 +39,7 @@ Arch: ```yaourt -S miraiok-bin``` 或 ```yay mirok-bin```
 - [x] MiraiOK自升级 
 
 #### 下载地址
-|系统|备注|Gitee本地下载|Githu本地下载|
+|系统|备注|Gitee本地下载|Github本地下载|
 |-------------|---|----|---|
 |[Windows-386](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows_386.exe)|mirai-native用|[Windows-386](https://gitee.com/TFL2003/MiraiOK/attach_files/467043/download)|---|
 |[Windows-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows_amd64.exe)|不用native的话|[Windows-amd64](https://gitee.com/TFL2003/MiraiOK/attach_files/467046/download)|---|
