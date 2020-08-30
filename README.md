@@ -39,14 +39,14 @@ Arch: ```yaourt -S miraiok-bin``` 或 ```yay mirok-bin```
 - [x] MiraiOK自升级 
 
 #### 下载地址
-|系统|备注|
-|-------------|---|
-|[Windows-386](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows_386.exe)|mirai-native用|
-|[Windows-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows_amd64.exe)|不用native的话|
-|[Linux-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_amd64)|服务器用品|
-|[Linux-arm64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_arm64)|64位arm派用品|
-|[Linux-arm](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_arm)|arm派用品|
-|[Darwin-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_darwin_amd64)|MacOS用品 已测试，感谢fjh1997大佬|
+|系统|备注|Gitee本地下载|Githu本地下载|
+|-------------|---|----|---|
+|[Windows-386](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows_386.exe)|mirai-native用|[Windows-386](https://gitee.com/TFL2003/MiraiOK/attach_files/467043/download)|---|
+|[Windows-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows_amd64.exe)|不用native的话|[Windows-amd64](https://gitee.com/TFL2003/MiraiOK/attach_files/467046/download)|---|
+|[Linux-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_amd64)|服务器用品|[Linux-amd64](https://gitee.com/TFL2003/MiraiOK/attach_files/467041/download)|---|
+|[Linux-arm64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_arm64)|64位arm派用品|[Linux-arm64](https://gitee.com/TFL2003/MiraiOK/attach_files/467042/download)|---|
+|[Linux-arm](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_linux_arm)|arm派用品|[Linux-arm](https://gitee.com/TFL2003/MiraiOK/attach_files/467045/download)|---|
+|[Darwin-amd64](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_darwin_amd64)|MacOS用品 已测试，感谢fjh1997大佬|[Darwin-amd64](https://gitee.com/TFL2003/MiraiOK/attach_files/467044/download)|---|
 
 
 ### Tips
