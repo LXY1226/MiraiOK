@@ -67,7 +67,7 @@ jobs:
       - name: Upload exes
         env:
           OD_TOKEN: ${{ secrets.OD_TOKEN }}
-        run: 'tools/uploader_linux'
+        run: 'tools/uploader_linux output/* /mirai/MiraiOK'
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v2
