@@ -40,7 +40,7 @@ Arch: ```yaourt -S miraiok-bin``` 或 ```yay mirok-bin```
 - [x] Actions自动推送到oss便于下载
 - [x] MiraiOK自升级 
 
-#### 下载地址
+#### 下载地址 (由于种种原因(懒)此处的下载连接并不是最新版，但是可以通过MiraiOK自带的自更新能力进行更新, 同时旧版本也可以更新mirai)
 |系统|备注|
 |-------------|---|
 |[Windows-386](http://t.imlxy.net:64724/mirai/MiraiOK/miraiOK_windows-386.exe)|mirai-native用|
