@@ -54,7 +54,7 @@ func main() {
 	if err != nil {
 		log.Print("java退出，", err)
 		ERROR("运行失败，尝试更新mirai三件套", err.Error())
-		updateMirai()
+		updateMirai(true)
 		WARN("请重新启动MiraiOK")
 		var str string
 		INFO("按任意键退出")

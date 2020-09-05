@@ -91,7 +91,6 @@ func initStor() {
 		return
 	}
 	accessToken = "Bearer " + dumpASToken(data)
-	INFO("初始化远程存储成功")
 }
 
 func downFile(path string) *bufio.Reader {

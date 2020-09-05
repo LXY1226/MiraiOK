@@ -32,14 +32,14 @@ func doUpdate() {
 	} else {
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
-			updateMirai()
+			updateMirai(false)
 		} else {
 			INFO("删除.lastupdate来在下次启动时强制检查更新")
 		}
 	}
 }
 
-func updateMirai() {
+func updateMirai(force bool) {
 	INFO("开始检查Mirai更新... 也可以通过创建.noupdate文件来禁用更新")
 	rb := downFile("shadow/latest.txt")
 	if rb == nil {
@@ -61,7 +61,7 @@ func updateMirai() {
 	for _, li := range libs {
 		go func(li lib) {
 			INFO("下载", li.name, "版本", li.version)
-			if _, err := os.Stat(li.LibPath()); err == nil {
+			if _, err := os.Stat(li.LibPath()); !force && err == nil {
 				goto done
 			}
 			save(downFile("shadow/"+li.Path()), li.LibPath())
