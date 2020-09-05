@@ -29,6 +29,7 @@ var libs []lib
 var globalWG = sync.WaitGroup{}
 
 func main() {
+	INFO("MiraiOK", BUILDTIME, RTStr)
 	INFO("此程序以Affero GPL3.0协议发布，使用时请遵守协议")
 	INFO("部分开源于: github.com/LXY1226/MiraiOK")
 	doUpdate()

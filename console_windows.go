@@ -20,13 +20,13 @@ func init() {
 }
 
 func colorINFO() {
-	colorFunc.Call(os.Stdout.Fd(), uintptr(0xa)) // GREEN
+	colorFunc.Call(fd, uintptr(0xa)) // Green
 }
 
 func colorWARN() {
-	colorFunc.Call(os.Stdout.Fd(), uintptr(0x4)) // RED
+	colorFunc.Call(fd, uintptr(0xc)) // Light Red
 }
 
 func colorERROR() {
-	colorFunc.Call(os.Stdout.Fd(), uintptr(0x4)) //?
+	colorFunc.Call(fd, uintptr(0x4)) // Red
 }
