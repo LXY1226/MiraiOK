@@ -17,13 +17,12 @@ func checkJava() {
 	if checkJavaBin() {
 		return
 	}
-	FATAL("无法获取JRE，即将退出...")
+	ERROR("无法获取JRE，即将退出...")
 	os.Exit(0)
 }
 
 func checkJavaBin() bool {
 	var stdo bytes.Buffer
-	DEBUG("Trying Locating JRE:", javaPath)
 	cmd := exec.Command(javaPath, "-version")
 	cmd.Stdout = &stdo
 	cmd.Stderr = &stdo

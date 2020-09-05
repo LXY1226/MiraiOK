@@ -5,11 +5,8 @@ package main
 import (
 	"bytes"
 	"os/exec"
-	"runtime"
 	"strings"
 )
-
-const RTStr = runtime.GOOS + "-" + runtime.GOARCH
 
 func checkJava() {
 	//检测本地java

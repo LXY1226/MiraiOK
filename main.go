@@ -15,12 +15,14 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"sync"
 )
 
 const (
 	mainClass = "net.mamoe.mirai.console.pure.MiraiConsolePureLoader"
 	libDIR    = "libs/"
+	RTStr     = runtime.GOOS + "-" + runtime.GOARCH
 )
 
 var javaPath = "./jre/bin/java"
