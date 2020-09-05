@@ -60,10 +60,10 @@ func updateMirai(force bool) {
 	globalWG.Add(len(libs))
 	for _, li := range libs {
 		go func(li lib) {
-			INFO("下载", li.name, "版本", li.version)
 			if _, err := os.Stat(li.LibPath()); !force && err == nil {
 				goto done
 			}
+			INFO("下载", li.name, "版本", li.version)
 			save(downFile("shadow/"+li.Path()), li.LibPath())
 		done:
 			globalWG.Done()
