@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"crypto/tls"
-	"gitee.com/LXY1226/logging"
 	rar "github.com/nwaples/rardecode"
 	"io"
 	"io/ioutil"
@@ -14,8 +13,6 @@ import (
 	"strings"
 	"sync"
 )
-
-const UA = "MiraiOK|" + BUILDTIME + "|" + logging.RTStr
 
 var accessToken string
 var Stor sync.Once
@@ -42,7 +39,7 @@ func unpackRAR(br *bufio.Reader) bool {
 	}
 	r, err := rar.NewReader(br, "")
 	if err != nil {
-		logging.ERROR("解压出错:", err.Error())
+		ERROR("解压出错:", err.Error())
 		return false
 	}
 
@@ -79,22 +76,22 @@ func initStor() {
 	}
 	req, err := http.NewRequest("POST", torURL, strings.NewReader(tor))
 	if err != nil {
-		logging.WARN("初始化远程存储失败")
+		WARN("初始化远程存储失败")
 		return
 	}
 	req.Header.Set("User-Agent", ua)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logging.WARN("初始化远程存储失败")
+		WARN("初始化远程存储失败")
 		return
 	}
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logging.WARN("初始化远程存储失败")
+		WARN("初始化远程存储失败")
 		return
 	}
 	accessToken = "Bearer " + dumpASToken(data)
-	logging.INFO("初始化远程存储成功")
+	INFO("初始化远程存储成功")
 }
 
 func downFile(path string) *bufio.Reader {
@@ -104,18 +101,18 @@ func downFile(path string) *bufio.Reader {
 	}
 	req, err := http.NewRequest("GET", dowURL+path+":/content", nil)
 	if err != nil {
-		logging.WARN("URL初始化失败", path)
+		WARN("URL初始化失败", path)
 		return nil
 	}
 	req.Header.Set("User-Agent", ua)
 	req.Header.Set("Authorization", accessToken)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logging.WARN("访问远程存储失败")
+		WARN("访问远程存储失败")
 		return nil
 	}
 	if resp.StatusCode != 200 {
-		logging.WARN("下载失败", path)
+		WARN("下载失败", path)
 		return nil
 	}
 	return bufio.NewReaderSize(resp.Body, 1<<20)

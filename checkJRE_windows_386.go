@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"gitee.com/LXY1226/logging"
 	"os"
 	"os/exec"
 	"strings"
@@ -14,17 +13,17 @@ func checkJava() {
 	if checkJavaBin() {
 		return
 	}
-	unpackRAR(downFile("mirai-repo/shadow/jre-" + logging.RTStr + ".rar"))
+	unpackRAR(downFile("mirai-repo/shadow/jre-" + RTStr + ".rar"))
 	if checkJavaBin() {
 		return
 	}
-	logging.FATAL("无法获取JRE，即将退出...")
+	FATAL("无法获取JRE，即将退出...")
 	os.Exit(0)
 }
 
 func checkJavaBin() bool {
 	var stdo bytes.Buffer
-	logging.DEBUG("Trying Locating JRE:", javaPath)
+	DEBUG("Trying Locating JRE:", javaPath)
 	cmd := exec.Command(javaPath, "-version")
 	cmd.Stdout = &stdo
 	cmd.Stderr = &stdo
@@ -33,7 +32,7 @@ func checkJavaBin() bool {
 		return false
 	}
 	for str, err := stdo.ReadString('\n'); err == nil; {
-		logging.INFO("JRE:", strings.TrimRight(str, "\r\n"))
+		INFO("JRE:", strings.TrimRight(str, "\r\n"))
 		str, err = stdo.ReadString('\n')
 	}
 	return true

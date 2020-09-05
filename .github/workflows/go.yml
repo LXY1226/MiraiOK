@@ -19,7 +19,7 @@ jobs:
       - name: Setup Golang environment
         uses: actions/setup-go@v1
         with:
-          go-version: '1.14.3' # The Go version to download (if necessary) and use.
+          go-version: '1.15' # The Go version to download (if necessary) and use.
 
       - name: Cache Go
         id: cache
@@ -28,14 +28,6 @@ jobs:
           # A list of files, directories, and wildcard patterns to cache and restore
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-build-${{ hashFiles('**/go.sum') }}
-
-      - name: Cache Mirai
-        id: cache-Mirai
-        uses: actions/cache@v2
-        with:
-          # A list of files, directories, and wildcard patterns to cache and restore
-          path: test/
-          key: MiraiOK-v1.0.3-${{ hashFiles('test/device.json') }}
 
       - name: Tidy Go modules
         run: go mod tidy
@@ -50,30 +42,24 @@ jobs:
           echo const BUILDTIME = \"${TIME}\"  >> build.go && cat build.go
           mkdir output && echo ${TIME} > output/.version
           openssl enc -d -aes256 -in storInfo -k ${KEY} -pbkdf2 -out storInfo.go
-          # echo -e "----------\nlogin ${BOTINFO}\nsay 655057127 MiraiOK_${TIME}_Published!" > test/config.txt > test/config.txt
-
-      # - name: Linux Test
-      #   run: |
-      #     go test -c -i -o test/MiraiOK-test .
-      #     cd test && ./MiraiOK-test -test.v -test.run ^$ && rm config.txt && cd ..
 
       - name: Windows x86
-        run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_386.exe .
+        run: GOOS=windows GOARCH=386 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows-386.exe .
 
       - name: Windows x64
-        run: GOOS=windows GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows_amd64.exe .
+        run: GOOS=windows GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_windows-amd64.exe .
 
       - name: Linux amd64
-        run: GOOS=linux GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_amd64 .
+        run: GOOS=linux GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux-amd64 .
 
       - name: Linux arm64
-        run: GOOS=linux GOARCH=arm64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm64 .
+        run: GOOS=linux GOARCH=arm64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux-arm64 .
 
       - name: Linux arm
-        run: GOOS=linux GOARCH=arm go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux_arm .
+        run: GOOS=linux GOARCH=arm go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_linux-arm .
 
       - name: Darwin amd64
-        run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin_amd64 .
+        run: GOOS=darwin GOARCH=amd64 go build -tags release -ldflags "-w -s" -gcflags "-l=4" -o output/miraiOK_darwin-amd64 .
 
       - name: UPX
         run: 'tools/upx output/*'

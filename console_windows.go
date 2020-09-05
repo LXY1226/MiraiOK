@@ -1,11 +1,32 @@
 package main
 
 import (
-	"github.com/k0kubun/go-ansi"
-	"golang.org/x/text/encoding/simplifiedchinese"
-	"golang.org/x/text/transform"
+	"os"
+	"syscall"
 )
 
-var console = transform.NewWriter(ansi.NewAnsiStdout(), simplifiedchinese.GBK.NewDecoder())
+var colorFunc *syscall.Proc
+var fd = os.Stdout.Fd()
 
-func noStop() {}
+func init() {
+	dll, err := syscall.LoadDLL("kernel32.dll")
+	if err != nil {
+		return
+	}
+	colorFunc, err = dll.FindProc("SetConsoleTextAttribute")
+	if err != nil {
+		return
+	}
+}
+
+func colorINFO() {
+	colorFunc.Call(os.Stdout.Fd(), uintptr(0xa)) // GREEN
+}
+
+func colorWARN() {
+	colorFunc.Call(os.Stdout.Fd(), uintptr(0x4)) // RED
+}
+
+func colorERROR() {
+	colorFunc.Call(os.Stdout.Fd(), uintptr(0x4)) //?
+}
