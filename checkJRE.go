@@ -23,7 +23,7 @@ func checkJava() {
 	INFO("未发现JRE，准备下载...")
 	globalWG.Add(1)
 	go func() {
-		if unpackRAR(downFile("mirai-repo/shadow/jre-" + RTStr + ".rar")) {
+		if unpackRAR(downFile("MiraiOK/jre-" + RTStr + ".rar")) {
 			if checkJavaBin() {
 				globalWG.Done()
 				return

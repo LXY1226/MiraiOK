@@ -13,7 +13,7 @@ func checkJava() {
 	if checkJavaBin() {
 		return
 	}
-	unpackRAR(downFile("mirai-repo/shadow/jre-" + RTStr + ".rar"))
+	unpackRAR(downFile("MiraiOK/jre-" + RTStr + ".rar"))
 	if checkJavaBin() {
 		return
 	}
