@@ -42,7 +42,6 @@ func main() {
 	}
 	cmd := exec.Command(javaPath, mainClass)
 	cmd.Env = append(cmd.Env, classpath)
-	println(classpath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin

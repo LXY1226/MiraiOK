@@ -12,7 +12,7 @@ func doUpdate() {
 	go updateSelf()
 	update := true
 	_, err := os.Stat(".NOUPDATE")
-	if err != nil && os.IsNotExist(err) {
+	if err == nil {
 		update = false
 	}
 	data, err := ioutil.ReadFile(libDIR + "version.txt")
