@@ -36,7 +36,7 @@ Arch: ```yaourt -S miraiok-bin``` 或 ```yay mirok-bin```
 ## 已经能做到
 - [x] 从几个比较~~稳定~~的镜像源下载
 - [x] 自动更新mirai运行需要的东西
-- [x] 一球人需要的自动登录
+- [x] ~~一球人需要的自动登录~~ 因mirai得stdin处理有大问题，但是mirai下个版本会添加自动登录，届时支持
 - [x] Actions自动推送到oss便于下载
 - [x] MiraiOK自升级 
 
