@@ -11,7 +11,6 @@ package main
  */
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -27,8 +26,8 @@ const (
 
 var javaPath = "./jre/bin/java"
 var arg0 = os.Args[0]
-var libs []lib
 var globalWG = sync.WaitGroup{}
+var classpath string
 
 func main() {
 	INFO("MiraiOK", BUILDTIME, RTStr)
@@ -36,10 +35,6 @@ func main() {
 	INFO("部分开源于: github.com/LXY1226/MiraiOK")
 	doUpdate()
 	globalWG.Wait()
-	classpath := "CLASSPATH="
-	for _, lib := range libs {
-		classpath += lib.LibPath() + CPSEP
-	}
 	cmd := exec.Command(javaPath, mainClass)
 	cmd.Env = append(cmd.Env, classpath)
 	cmd.Stdout = os.Stdout
@@ -56,8 +51,7 @@ func main() {
 		ERROR("运行失败，尝试更新mirai三件套", err.Error())
 		updateMirai(true)
 		WARN("请重新启动MiraiOK")
-		var str string
 		INFO("按任意键退出")
-		fmt.Scan(&str)
+		os.Stdin.Read(nil)
 	}
 }

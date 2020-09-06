@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/ioutil"
 	"os"
 )
 
@@ -9,7 +10,10 @@ type lib struct {
 	name, version string
 }
 
-func checkLibs() bool {
+func checkLibs(libs []lib) bool {
+	if libs == nil || len(libs) == 0 {
+		return false
+	}
 	for _, lib := range libs {
 		_, err := os.Stat(lib.LibPath())
 		if err != nil {
@@ -20,9 +24,15 @@ func checkLibs() bool {
 	return true
 }
 
-func parseLibs(data []byte) []lib {
+func parseLibs() []lib {
+	data, err := ioutil.ReadFile(libDIR + "version.txt")
+	if err != nil {
+		WARN("读取库列表失败", err)
+		return nil
+	}
 	libs := make([]lib, 4)[:0]
 	pos := 0
+	classpath = "CLASSPATH="
 	for {
 		pos = bytes.IndexByte(data, '\n')
 		if pos == -1 {
@@ -42,6 +52,7 @@ func parseLibs(data []byte) []lib {
 		}
 		l.version = string(line[pos+1:])
 		libs = append(libs, l)
+		classpath += l.LibPath() + CPSEP
 	}
 }
 

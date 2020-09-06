@@ -15,19 +15,13 @@ func doUpdate() {
 	if err == nil {
 		update = false
 	}
-	data, err := ioutil.ReadFile(libDIR + "version.txt")
-	if err != nil {
-		INFO("读取库列表出现错误", err)
+	if !checkLibs(parseLibs()) {
 		if !update {
+			WARN("检测到NOUPDATE但是无法解析库列表，强制更新")
 			update = true
 		}
-	} else {
-		libs = parseLibs(data)
 	}
-	if !checkLibs() {
-		update = true
-	}
-	if libs != nil && len(libs) != 0 && !update {
+	if !update {
 		INFO("跳过mirai更新")
 	} else {
 		inf, err := os.Stat(".lastupdate")
@@ -41,22 +35,16 @@ func doUpdate() {
 
 func updateMirai(force bool) {
 	INFO("开始检查Mirai更新... 也可以通过创建.noupdate文件来禁用更新")
-	rb := downFile("shadow/latest.txt")
-	if rb == nil {
+	os.MkdirAll(libDIR, 0755)
+	if !save(downFile("shadow/latest.txt"), libDIR+"version.txt") {
 		ERROR("无法下载Mirai版本信息")
 		return
 	}
-	data, _ := ioutil.ReadAll(rb)
-	libs = parseLibs(data)
+	libs := parseLibs()
 	if libs == nil {
-		ERROR("mirai-repo出错...")
-
+		ERROR("mirai-repo出错... [libs == nil] 请截图联系miraiOK")
 	}
 	os.MkdirAll(libDIR[:len(libDIR)-1], 0755)
-	err := ioutil.WriteFile(libDIR+"version.txt", data, 0755)
-	if err != nil {
-		ERROR("无法写入库列表", err)
-	}
 	globalWG.Add(len(libs))
 	for _, li := range libs {
 		go func(li lib) {
