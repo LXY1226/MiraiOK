@@ -52,8 +52,8 @@ func updateMirai(force bool) {
 		ERROR("mirai-repo出错...")
 
 	}
-	os.MkdirAll(libDIR[:len(libDIR)-1], 0644)
-	err := ioutil.WriteFile(libDIR+"version.txt", data, 0644)
+	os.MkdirAll(libDIR[:len(libDIR)-1], 0666)
+	err := ioutil.WriteFile(libDIR+"version.txt", data, 0777)
 	if err != nil {
 		ERROR("无法写入库列表", err)
 	}
@@ -70,7 +70,7 @@ func updateMirai(force bool) {
 		}(li)
 	}
 	globalWG.Wait()
-	_ = ioutil.WriteFile(".lastupdate", nil, 0755)
+	_ = ioutil.WriteFile(".lastupdate", nil, 0777)
 }
 
 func updateSelf() {

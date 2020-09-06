@@ -4,6 +4,8 @@ package main
 
 import "os"
 
+const CPSEP = ":"
+
 func colorINFO() {
 	os.Stdout.Write([]byte{0x1b, '[', '9', '2', 'm'})
 }

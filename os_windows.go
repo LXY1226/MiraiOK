@@ -5,6 +5,8 @@ import (
 	"syscall"
 )
 
+const CPSEP = ";"
+
 var colorFunc *syscall.Proc
 var fd = os.Stdout.Fd()
 
