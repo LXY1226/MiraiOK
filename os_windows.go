@@ -9,6 +9,7 @@ const CPSEP = ";"
 
 var colorFunc *syscall.Proc
 var fd = os.Stdout.Fd()
+var defaultColor uintptr
 
 func init() {
 	dll, err := syscall.LoadDLL("kernel32.dll")
@@ -23,6 +24,10 @@ func init() {
 
 func colorINFO() {
 	colorFunc.Call(fd, uintptr(0xa)) // Green
+}
+
+func colorReset() {
+	colorFunc.Call(fd, uintptr(0x7))
 }
 
 func colorWARN() {

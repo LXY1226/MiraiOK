@@ -11,33 +11,31 @@ var lDate = tTime{
 	buf: []byte("xxxx-xx-xx xx:xx:xx"),
 }
 
+var running = false
+
 var lLock sync.Mutex
 
-func INFO(v ...interface{}) {
+func lPrint(colorFunc func(), prefix string, v ...interface{}) {
 	lLock.Lock()
-	colorINFO()
+	colorFunc()
 	os.Stdout.Write(lDate.str())
-	os.Stdout.WriteString(" I/MiraiOK: ")
 	fmt.Println(v...)
+	if running {
+		colorReset()
+	}
 	lLock.Unlock()
+}
+
+func INFO(v ...interface{}) {
+	lPrint(colorINFO, " I/MiraiOK: ", v...)
 }
 
 func WARN(v ...interface{}) {
-	lLock.Lock()
-	colorWARN()
-	os.Stdout.Write(lDate.str())
-	os.Stdout.WriteString(" W/MiraiOK: ")
-	fmt.Println(v...)
-	lLock.Unlock()
+	lPrint(colorWARN, " W/MiraiOK: ", v...)
 }
 
 func ERROR(v ...interface{}) {
-	lLock.Lock()
-	colorERROR()
-	os.Stdout.Write(lDate.str())
-	os.Stdout.WriteString(" E/MiraiOK: ")
-	fmt.Println(v...)
-	lLock.Unlock()
+	lPrint(colorERROR, " E/MiraiOK: ", v...)
 }
 
 type tTime struct {

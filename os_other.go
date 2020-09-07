@@ -7,13 +7,17 @@ import "os"
 const CPSEP = ":"
 
 func colorINFO() {
-	os.Stdout.Write([]byte{0x1b, '[', '9', '2', 'm'})
+	os.Stdout.Write([]byte{27, '[', '9', '2', 'm'})
 }
 
 func colorWARN() {
-	os.Stdout.Write([]byte{0x1b, '[', '9', '1', 'm'})
+	os.Stdout.Write([]byte{27, '[', '9', '1', 'm'})
 }
 
 func colorERROR() {
-	os.Stdout.Write([]byte{0x1b, '[', '3', '1', 'm'})
+	os.Stdout.Write([]byte{27, '[', '3', '1', 'm'})
+}
+
+func colorReset() {
+	os.Stdout.Write([]byte{27, '[', '0', 'm'})
 }

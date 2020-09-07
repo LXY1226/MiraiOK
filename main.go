@@ -45,6 +45,8 @@ func main() {
 	if err == nil {
 		INFO("删除旧版MiraiOK")
 	}
+	colorReset()
+	running = true
 	err = cmd.Run()
 	if err != nil {
 		log.Print("java退出，", err)
