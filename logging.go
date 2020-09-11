@@ -19,6 +19,7 @@ func lPrint(colorFunc func(), prefix string, v ...interface{}) {
 	lLock.Lock()
 	colorFunc()
 	os.Stdout.Write(lDate.str())
+	os.Stdout.WriteString(prefix)
 	fmt.Println(v...)
 	if running {
 		colorReset()
