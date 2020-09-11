@@ -21,7 +21,7 @@ func save(br *bufio.Reader, fname string) bool {
 	if br == nil {
 		return false
 	}
-	f, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0755)
+	f, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
 	if err != nil {
 		panic(err)
 	}
