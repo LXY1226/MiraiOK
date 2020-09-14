@@ -1,8 +1,5 @@
-# ~~停止维护~~ 再维护亿下
-原因：~~找到替代品~~ console出现了不兼容更新
-
-
-### 本次为不兼容更新，mirai与miraiOK均为不兼容更新，此版本将不会推送至已有版本。
+# 目前不会花费很多精力维护OK，希望有dalao来接坑
+## caused by 开学&miraigo
 
 <div align="center">
    <img width="160" src="assets/mirai.png" alt="logo"></br>
@@ -56,7 +53,7 @@ Arch: ```yaourt -S miraiok-bin``` 或 ```yay mirok-bin```
 修改`config.txt`来使用Mirai自带的自动登录  
 
 
-## TODO 
+## ~~TODO~~ 已咕 
 - [ ] 校验文件  
 - [ ] WEB前端 
 - [ ] 插件中心  
