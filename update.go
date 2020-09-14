@@ -9,7 +9,6 @@ import (
 
 func doUpdate() {
 	checkJava()
-	go updateSelf()
 	update := true
 	_, err := os.Stat(".NOUPDATE")
 	if err == nil {
@@ -26,6 +25,7 @@ func doUpdate() {
 	} else {
 		inf, err := os.Stat(".lastupdate")
 		if err != nil || time.Now().Sub(inf.ModTime()) > time.Hour {
+			go updateSelf()
 			syncLibs()
 			getLibs(parseLibs(), false)
 		} else {
