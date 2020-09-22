@@ -33,13 +33,8 @@ Arch: ```yaourt -S miraiok-bin``` 或 ```yay mirok-bin```
 ## 已经能做到
 - [x] 从几个比较~~稳定~~的镜像源下载
 - [x] 自动更新mirai运行需要的东西
-- [x] 自动登录：自行更改`\config\Console`文件夹里的`AutoLogin.yml`.`123456654321`替换为qq号，`example`替换为qq密码  
-
-      >```yaml
-      >plainPasswords: 
-      >  123456654321: example
-      >md5Passwords: 
-      >  123456654321: 1A 79 A4 D6 0D E6 71 8E 8E 5B 32 6E 33 8A E5 33
+- [x] 自动登录：自行更改`\config\Console`文件夹里的`AutoLogin.yml`.  
+               `123456654321`替换为qq号，`example`替换为qq密码  
 - [x] Actions自动推送到oss便于下载
 - [x] MiraiOK自升级 
 
